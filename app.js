@@ -1,12 +1,16 @@
 import express from "express";
-const app = express();
-export default app;
-
 import employees from "#db/employees";
+import employeeRouter from "./routes/employees";
+
+const app = express();
+
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Hello employees!");
 });
+
+app.use("/employees", employeeRouter);
 
 app.get("/employees", (req, res) => {
   res.send(employees);
@@ -32,3 +36,10 @@ app.get("/employees/:id", (req, res) => {
 
   res.send(employee);
 });
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something went wrong!");
+});
+
+export default app;
